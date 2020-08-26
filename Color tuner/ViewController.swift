@@ -11,7 +11,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var MickeyImageView: UIImageView!
     
     // 設置元件 UIView (名為 gradientView)，並以 IBOutlet 連結到圖檔 clothesView (當作漸層)
-    @IBOutlet weak var gradientView: UIView!
+    @IBOutlet var gradientView: UIView! // 為了搭配 gradientView.removeFromSuperview() ，在漸層後也可繼續使用其它的 slider 調色 (將漸層效果移除)，所以這裡要把 "weak" 四個字母刪掉
     
     
     // 設置元件 UISlider (R / G / B / Alpha) ，並以 IBOutlet 連結至程式中的變數 redSlider ，用以對應各個 Slider
@@ -22,7 +22,7 @@ class ViewController: UIViewController {
             
     // 漸層效果要另外拉 IBOutlet 連結所對應的圖面部位的 UIView，例：口袋 或 身體
     // 設置元件 UISlider (gradientSlider) ，並以 IBOutlet 連結至程式中的變數 gradientSlider ，用以對應關係
-    @IBOutlet weak var gradientSlider: UISlider!
+    @IBOutlet var gradientSlider: UISlider!
     
     
     // 設置元件 UILabel 並以 IBOutlet 連結至程式中的 redSliderValueDisplay ，用以顯示 redSlider 的數值
@@ -31,15 +31,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var blueSliderValueDisplay: UILabel!
     @IBOutlet weak var alphaSliderValueDisplay: UILabel!
     
-
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-
          
         let clothesImageView = UIImageView(image: UIImage(named: "clothes")) // 宣告一個名為 clothesImageView 的常數，並存入名為 clothes 的圖檔
         clothesImageView.frame = clothesView.bounds // 將 clothesImageView (UIImageView) 的框架尺寸調整成跟 clothesView (UIView 的 IBOutlet) 一樣
@@ -53,7 +49,7 @@ class ViewController: UIViewController {
         MickeyImageView.frame = clothesView.bounds // 將 MickeyImageView (UIImageView) 的框架尺寸調整成跟 clothesView (UIView 的 IBOutlet) 一樣
         MickeyImageView.contentMode = .scaleAspectFit // 設定 MickeyImageView (UIImageView) 的顯示模式為 Aspect fit
         
-        gradientView.frame = MickeyImageView.bounds // 將 gradientView (UIImageView) 的框架尺寸調整成跟 clothesView (UIView 的 IBOutlet) 一樣
+        gradientView.frame = clothesView.bounds // 將 gradientView (UIImageView) 的框架尺寸調整成跟 clothesView (UIView 的 IBOutlet) 一樣
         
         
     }
@@ -61,7 +57,7 @@ class ViewController: UIViewController {
     // 宣告一個名為 changingColorSlidder 的 IBAction function ，用以設定 UIImageView 的背景顏色隨 UISlidder 的動作改變
     // 連結 IBoutlet 的 UIView (clothesView) 到所有的 slider ，才可以順利反應 slider 的動作到 clothesView
     @IBAction func changingColorSlidder(_ sender: UISlider) {
-        
+        gradientView.removeFromSuperview() // 將漸層效果移除
         clothesView.backgroundColor = UIColor(red: CGFloat(redSlider.value), green: CGFloat(greenSlider.value), blue: CGFloat(blueSlider.value), alpha: CGFloat(alphaSlider.value))
             }
     
@@ -94,6 +90,7 @@ class ViewController: UIViewController {
     
     // 設置一個 隨機選擇顏色的按鈕，以改變衣服的顏色
     @IBAction func randomize(_ sender: UIButton) {
+        gradientView.removeFromSuperview() // 將漸層效果移除
         redSlider.value = Float.random(in: 0...0.5) // 因為 Mickey 原本就是穿紅色，所以故意讓紅色衣服不出現，才會有隨機選色的新鮮感
         greenSlider.value = Float.random(in: 0...1)
         blueSlider.value = Float.random(in: 0...1)
